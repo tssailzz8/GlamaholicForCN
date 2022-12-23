@@ -1,0 +1,24 @@
+image: fedora/latest
+packages:
+  - dotnet
+  - wget
+  - unzip
+  - zip
+sources:
+  - https://git.sr.ht/~jkcclemens/Glamaholic
+tasks:
+  - download-dalamud: |
+      mkdir dalamud
+      cd dalamud
+      wget https://github.com/goatcorp/dalamud-distrib/raw/main/latest.zip
+      unzip latest.zip
+      rm latest.zip
+  - build-plugin: |
+      cd Glamaholic/Glamaholic
+      dotnet build -c Release -p:IsCI=true
+  - package: |
+      cd Glamaholic/Glamaholic/bin/Release/net5.0-windows
+      zip -r release.zip Glamaholic
+artifacts:
+  - Glamaholic/Glamaholic/bin/Release/net5.0-windows/Glamaholic/latest.zip
+  - Glamaholic/Glamaholic/bin/Release/net5.0-windows/release.zip
